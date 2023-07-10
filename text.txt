@@ -1,0 +1,40 @@
+const fs = require('fs');
+const path = require('path');
+const products = [];
+module.exports = class Product{
+constructor(t){
+    this.title= t;
+
+}
+save(){
+   const p = path.join(
+    path.dirname(require.main.filename),
+    'data',
+    'products.json'
+    
+    );
+    fs.readFileSync(p,(err,filecontent)=>{
+        let products=[];
+       if(!err){
+products = JSON.parse(filecontent);
+       }
+       products.push(this)
+
+fs.writeFileSync(p, JSON.stringify(products), err => {
+  if (err) {
+    console.error(err);
+  }
+  // file written successfully
+});})
+}
+static fetchAll(cb){
+    const p = path.join(
+        path.dirname(require.main.filename),'data','products.json');
+    fs.readFileSync(p, (err, fileContent)=>{
+        if(err){
+           cb ([]);
+        }
+        cb( JSON.parse(fileContent));
+    })
+}
+}
